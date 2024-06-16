@@ -1,0 +1,31 @@
+MYSQL:
+  HOST: 127.0.0.1
+  PORT: 3306
+  USERNAME: root
+  PASSWORD: liugh
+  DBNAME: discover_book
+  POOL_SIZE: 10  # 连接池中的连接数
+  MAX_OVERFLOW: 5  # 当连接池中的连接都被使用时，可以额外创建的最大连接数
+  POOL_RECYCLE: 3600  # 多久之后自动回收连接（秒），设置为 None 则不回收
+  POOL_PRE_PING: True # 当从连接池中获取连接时，先检查连接是否有效
+
+MONGO:
+  HOST: 127.0.0.1
+  PORT: 27017
+  MAXPOOLSIZE: 200
+  MINPOOLSIZE: 10
+  WAITQUEUETIMEOUTMS: 250 # 等待可用连接的时间
+
+REDIS:
+  REDIS_HOST: localhost
+  REDIS_PORT: 6380
+  # PASSWORD:
+
+CONCURRENT_REQUESTS: 100
+DOWNLOAD_DELAY: 3
+SCHEDULER: scrapy_redis.scheduler.Scheduler
+DUPEFILTER_CLASS: scrapy_redis.dupefilter.RFPDupeFilter
+SCHEDULER_QUEUE_CLASS: scrapy_redis.queue.SpiderQueue
+SCHEDULER_PERSIST: True
+
+STATIC_DIR: G:\develop\爬虫复习\book_discover\book_discover\book_discover_spider\static

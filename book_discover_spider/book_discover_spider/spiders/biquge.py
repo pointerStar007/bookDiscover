@@ -1,14 +1,21 @@
-# from scrapy_redis.spiders import RedisSpider
+from scrapy_redis.spiders import RedisSpider
 from scrapy import Spider, Request
+import time
 import re
-from ..utils.md5 import calculate_md5
+from utils import calculate_md5,config
+import os
 
 
-class BiqugeSpider(Spider):
+class BiqugeSpider(RedisSpider):
     name = "biquge"
-    allowed_domains = ["bbiquge.la"]
-    # redis_key = 'biqugespider:start_urls'
-    start_urls = ['https://www.bbiquge.la/book_1000000000/']
+    # allowed_domains = ["bbiquge.la"]
+    redis_key = 'book_discover:start_urls'
+    # start_urls = ['https://www.bbiquge.la/book_1/']
+
+    def __init__(self, *args, **kwargs):
+        domain = kwargs.pop('domain', '')
+        self.allowed_domains = list(filter(None, domain.split(','))) if domain else ["bbiquge.la"]
+        super(BiqugeSpider, self).__init__(*args, **kwargs)
 
     def parse(self, response):
 
@@ -41,10 +48,11 @@ class BiqugeSpider(Spider):
             item["index"] = index
 
         book = {
+            "_id": calculate_md5(book_name+book_author),
             "book_name": book_name,
             "info": info_text,
             "author": book_author,
-            "cover_path": img_url,
+            "cover_path": calculate_md5(img_url)+".png",
             "book_type": book_type,
             "word_count": word_count,
             "chapter_total": len(chapter_list),
@@ -58,7 +66,8 @@ class BiqugeSpider(Spider):
             yield Request(url=response.request.url + item["href"], meta={"book": book,"chapterindex":item["index"],"_id": calculate_md5(item["title"] + item["href"])},callback=self.praseContent) # 请求详情页数据
 
         url = f'https://www.bbiquge.la/book/{int(response.request.url.split("_")[1][:-1])+1}'
-        yield Request(url=url,callback=self.parse)
+        yield Request(url=url,callback=self.parse,dont_filter=True) # 不去重方便增量更新
+        yield Request(url=img_url,callback=self.img_save)
 
     def praseContent(self, response):
         content = response.xpath("//div[@id='content']/text()").extract() # 取正文
@@ -72,7 +81,15 @@ class BiqugeSpider(Spider):
             "title":title,
             "chapterindex":chapterindex,
             "content":content,
+            "book_id": book["_id"],
+            "book_name":book["book_name"],
+            "book_author":book["author"],
+            "book_type":book["book_type"],
             "book":book
         }
         yield books_content_
 
+
+    def img_save(self,response):
+        with open(os.path.join(config["STATIC_DIR"],calculate_md5(response.request.url)+".png"),"wb") as f:
+            f.write(response.content)
