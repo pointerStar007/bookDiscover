@@ -16,6 +16,7 @@ class Config(Singleton,UserDict):
 
     def load_config(self):
         with open('/book_discover_spider/conf/config.yaml', 'r', encoding="utf8") as file:
+        # with open('conf/config.yaml', 'r', encoding="utf8") as file:
             self.data = yaml.safe_load(file)
 
 config = Config()

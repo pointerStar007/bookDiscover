@@ -55,7 +55,6 @@ class BookDiscoverSpiderSpiderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
 
-
 class BookDiscoverSpiderDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
@@ -72,13 +71,15 @@ class BookDiscoverSpiderDownloaderMiddleware:
         # Called for each request that goes through the downloader
         # middleware.
 
+        if '/book_' in request.url and not request.url.endswith('.html'):
+            # 如果是，则设置dont_filter为True
+            request.meta['dont_filter'] = True
         # Must either:
         # - return None: continue processing this request
         # - or return a Response object
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        return None
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

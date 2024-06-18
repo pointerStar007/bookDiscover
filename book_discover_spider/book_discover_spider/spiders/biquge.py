@@ -35,8 +35,12 @@ class BiqugeSpider(RedisSpider):
         word_count = re.findall(r'\d+万字', word_count)[0] if len(word_count) > 0 else ""  # 字数
         last_chapter = info.xpath("./p[4]/a/text()").extract_first()  # 最新内容标题
         info_text = "".join(info.xpath(r".//div[@id='intro']/text()").extract_first().split())  # 简介
-
         c_list = response.xpath(r"//dl//dd/a")  # 章节列表
+        if book_author is None or book_name is None or  len(c_list)==0 or img_url is None or img_url=="" :
+            # 故障排除，垃圾数据
+            url = f'https://www.bbiquge.la/book_{int(response.request.url.split("_")[1][:-1]) + 1}/'
+            yield Request(url=url, callback=self.parse, dont_filter=True)  # 不去重方便增量更新
+
         chapter_list = []
         for title, href in zip(c_list.xpath("./text()").extract(), c_list.xpath("./@href").extract()):
             chapter = {"title": title, "href": href}
