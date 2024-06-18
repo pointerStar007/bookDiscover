@@ -28,13 +28,13 @@ spec:
     spec:
       containers:
       - name: biquge-spider
-        image: 192.168.1.3:5000/biquge:1.0
+        image: 192.168.1.3:5000/biquge:1.3
         command: ["/opt/conda/envs/biquge/bin/scrapy","runspider","/book_discover_spider/book_discover_spider/spiders/biquge.py"]
         volumeMounts:
         - name: biquge-static
           mountPath: /book_discover_spider/static
         - name: biquge-config
-          mountPath: /book_discover_spider/config
+          mountPath: /book_discover_spider/conf
       volumes:
       - name: biquge-config
         configMap:
