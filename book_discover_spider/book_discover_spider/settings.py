@@ -36,7 +36,7 @@ REDIS_URL = f'redis://{config["REDIS"]["REDIS_HOST"]}:{config["REDIS"]["REDIS_PO
 
 # Enable Redis pipeline
 ITEM_PIPELINES = {
-    'scrapy_redis.pipelines.RedisPipeline': 100,
+    # 'scrapy_redis.pipelines.RedisPipeline': 100,
     "book_discover_spider.pipelines.BookDiscoverMysqlPipeline": 300,
     "book_discover_spider.pipelines.BookDiscoverMongoPipeline": 301,
     # "book_discover_spider.pipelines.BookDiscoverTestPipeline": 288,
