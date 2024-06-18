@@ -9,8 +9,8 @@ from utils.config import config
 
 def load_mongo_engine():
     mongo_config = config["MONGO"]
-    client = MongoClient(mongo_config["HOST"], mongo_config["PORT"], maxPoolSize=mongo_config["MAXPOOLSIZE"], minPoolSize=mongo_config["MINPOOLSIZE"], waitQueueTimeoutMS=mongo_config["WAITQUEUETIMEOUTMS"])
+    client = MongoClient(mongo_config["CONNECTION_STRING"], maxPoolSize=mongo_config["MAXPOOLSIZE"], minPoolSize=mongo_config["MINPOOLSIZE"], waitQueueTimeoutMS=mongo_config["WAITQUEUETIMEOUTMS"])
     # 接下来，你可以像之前一样使用client来选择数据库和集合，并进行操作
     return client
     # db = client['mydatabase']
-    # collection = db['mycollection']
+    # collection = db['mycollection']:

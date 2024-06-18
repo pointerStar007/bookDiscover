@@ -10,8 +10,9 @@ MYSQL:
   POOL_PRE_PING: True # 当从连接池中获取连接时，先检查连接是否有效
 
 MONGO:
-  HOST: 127.0.0.1
-  PORT: 27017
+  #HOST: 127.0.0.1
+  #PORT: 27017
+  CONNECTION_STRING: mongodb://192.168.1.3:27017/?replicaSet=replSetName
   MAXPOOLSIZE: 200
   MINPOOLSIZE: 10
   WAITQUEUETIMEOUTMS: 250 # 等待可用连接的时间
@@ -28,4 +29,4 @@ DUPEFILTER_CLASS: scrapy_redis.dupefilter.RFPDupeFilter
 SCHEDULER_QUEUE_CLASS: scrapy_redis.queue.SpiderQueue
 SCHEDULER_PERSIST: True
 
-STATIC_DIR: G:\develop\爬虫复习\book_discover\book_discover\book_discover_spider\static
+STATIC_DIR: /book_discover_spider/static

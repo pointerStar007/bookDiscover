@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: biquge-static-pvc
+  namespace: biquge
+spec:
+  accessModes:
+    - ReadWriteMany # 访问模式，这里设置为单节点读写
+  storageClassName: nfs-storage # 使用的存储类名称，这里假设为nfs-storage
+  resources:
+    requests:
+      storage: 10Gi # 请求的存储容量大小
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: biquge-spider
+  namespace: biquge
+spec:
+  selector:
+    matchLabels:
+      app: biquge-spider
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: biquge-spider
+    spec:
+      containers:
+      - name: biquge-spider
+        image: 192.168.1.3:5000/biquge:1.0
+        command: ["/opt/conda/envs/biquge/bin/scrapy","runspider","/book_discover_spider/book_discover_spider/spiders/biquge.py"]
+        volumeMounts:
+        - name: biquge-static
+          mountPath: /book_discover_spider/static
+        - name: biquge-config
+          mountPath: /book_discover_spider/config
+      volumes:
+      - name: biquge-config
+        configMap:
+          name: biquge-config
+          items:
+          - key: config.yaml
+            path: config.yaml
+      - name: biquge-static
+        persistentVolumeClaim:
+          claimName: biquge-static-pvc

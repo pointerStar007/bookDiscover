@@ -19,15 +19,16 @@ class MongoCRUDBook:
     @classmethod
     def insertBook(cls, book):
         now_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        book["create_time"] = now_time
         book["update_time"] = now_time
         book["is_delete"] = False
         try:
             # cls.coll.insert_one(book)
-            cls.coll.updateOne(
+            cls.coll.update_one(
             {"_id":book["_id"]},
-            { "$set": book},
-            {"upsert": True}
+            { "$set": book,
+              "$setOnInsert": {"create_time": now_time}  # 仅在新建文档时设置
+               },
+            upsert=True
             ) # 增量更新章节部分
         except:
             return

@@ -18,7 +18,7 @@ def load_mysql_engine():
     }
     engine = create_engine(
         f'mysql+pymysql://{db_config["MYSQL"]["USERNAME"]}:{db_config["MYSQL"]["PASSWORD"]}'
-        f'@{db_config["MYSQL"]["HOST"]}:{db_config["MYSQL"]["PORT"]}/{db_config["MYSQL"]["DBNAME"]}',
+        f'@{db_config["MYSQL"]["HOST"]}:{db_config["MYSQL"]["PORT"]}/{db_config["MYSQL"]["DBNAME"]}?charset=utf8mb4',
         pool_size=pool_args["pool_size"],max_overflow=pool_args["max_overflow"],pool_recycle=pool_args["pool_recycle"],pool_pre_ping=pool_args["pool_pre_ping"])
     return engine
 

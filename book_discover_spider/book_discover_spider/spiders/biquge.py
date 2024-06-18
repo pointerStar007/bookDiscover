@@ -65,7 +65,7 @@ class BiqugeSpider(RedisSpider):
         for item in chapter_list: # 获取详情页
             yield Request(url=response.request.url + item["href"], meta={"book": book,"chapterindex":item["index"],"_id": calculate_md5(item["title"] + item["href"])},callback=self.praseContent) # 请求详情页数据
 
-        url = f'https://www.bbiquge.la/book/{int(response.request.url.split("_")[1][:-1])+1}'
+        url = f'https://www.bbiquge.la/book_{int(response.request.url.split("_")[1][:-1])+1}/'
         yield Request(url=url,callback=self.parse,dont_filter=True) # 不去重方便增量更新
         yield Request(url=img_url,callback=self.img_save)
 

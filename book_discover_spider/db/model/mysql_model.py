@@ -105,7 +105,7 @@ class BookType(Base, ReprMixin):
 
 if __name__ == '__main__':
     from sqlalchemy import create_engine
-    from utils.config import db_config
+    from utils.config import config as db_config
     engine = create_engine(f'mysql+pymysql://{db_config["MYSQL"]["USERNAME"]}:{db_config["MYSQL"]["PASSWORD"]}'
         f'@{db_config["MYSQL"]["HOST"]}:{db_config["MYSQL"]["PORT"]}/{db_config["MYSQL"]["DBNAME"]}?')
     Base.metadata.create_all(engine)

@@ -1,1 +1,3 @@
 /book_discover_spider/book_discover_spider/static
+*.pyc
+.idea/* text eol=lf
